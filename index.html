@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPE chat</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+</head>
+
+<body>
+    <div class="signIn" id="divsignin">
+<input type="text" placeholder="ism" id="nameId">
+<input type="password" placeholder="parol" id="passId">
+<button onclick="kirish()">Kirish</button>
+    </div>
+    <div class="msg" id="msgId">
+       
+    </div>
+    <div class="sendDiv">
+        
+        <input type="text" placeholder="Xabar" id="txtid">
+        <input class="btn" type="submit" value="Send" onclick="sendMessage()">
+    </div>
+</body>
+<script src="./script.js"></script>
+
+</html>
