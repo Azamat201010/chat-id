@@ -1,30 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPE chat</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPE Chat</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
-
 <body>
-    <div class="signIn" id="divsignin">
-<input class="ism" placeholder="ism" id="nameId">
-<input class="login" type="password" placeholder="parol" id="passId">
-<button class="kirish" onclick="kirish()">Kirish</button>
-    </div>
-    <div class="msg" id="msgId">
-       
-    </div>
-    <div class="sendDiv">
-        
-        <input type="text" class="textin" placeholder="Xabar" id="txtid">
-        <input class="sendbtn"  type="submit" value="Send" onclick="sendMessage()">
-    </div>
-</body>
-<script src="./script.js"></script>
+  <!-- Login qismi -->
+  <div class="signIn" id="divsignin">
+    <input class="ism" placeholder="ism" id="nameId">
+    <input class="login" type="password" placeholder="parol" id="passId">
+    <button class="kirish" onclick="kirish()">Kirish</button>
+    <button class="kirish" onclick="showSignup()">Ro‘yxatdan o‘tish</button>
+  </div>
 
+  <!-- Ro‘yxatdan o‘tish qismi -->
+  <div class="signIn" id="divsignup" style="display:none;">
+    <input type="text" id="newName" placeholder="Yangi ism" class="ism">
+    <input type="password" id="newPass" placeholder="Yangi parol" class="login">
+    <button class="kirish" onclick="signup()">Ro‘yxatdan o‘tish</button>
+    <button class="kirish" onclick="showLogin()">Orqaga</button>
+  </div>
+
+  <!-- Chat qismi -->
+  <div id="chatDiv" style="display:none; width:100%">
+    <div class="msg" id="msgId"></div>
+    <div class="sendDiv">
+      <input type="text" class="textin" placeholder="Xabar" id="txtid">
+      <input class="sendbtn" type="submit" value="Send" onclick="sendMessage()">
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
 </html>
