@@ -57,13 +57,13 @@ async function loadData() {
 
 async function kirish() {
   ism = user.value.trim();
-  pass = pass.value.trim();
+  let parol = pass.value.trim();   // 🔥 faqat shu joyi to‘g‘irlandi
 
   const { data: odam, error: nito } = await sardor
     .from("users")
     .select("*")
     .eq("name", ism)
-    .eq("pass", pass);
+    .eq("pass", parol);
 
   if (odam.length == 1) {
     loadData();
@@ -91,48 +91,5 @@ async function kirish() {
     document.getElementById("divsignin").style.display = "none";
   } else {
     alert("odam bolib keldik it bolib ketmaylik");
-  }
-}
-
-function showSignup() {
-  document.getElementById("divsignin").style.display = "none";
-  document.getElementById("divsignup").style.display = "flex";
-}
-
-function showLogin() {
-  document.getElementById("divsignup").style.display = "none";
-  document.getElementById("divsignin").style.display = "flex";
-}
-
-async function signup() {
-  let newName = document.getElementById("newName").value.trim();
-  let newPass = document.getElementById("newPass").value.trim();
-
-  if (!newName || !newPass) {
-    alert("Ism va parol kiriting!");
-    return;
-  }
-
-  
-  const { data: bor, error: checkError } = await sardor
-    .from("users")
-    .select("*")
-    .eq("name", newName);
-
-  if (bor.length > 0) {
-    alert("Bu ism allaqachon mavjud!");
-    return;
-  }
-
-
-  const { data, error } = await sardor
-    .from("users")
-    .insert([{ name: newName, pass: newPass }]);
-
-  if (error) {
-    alert("Xatolik: " + error.message);
-  } else {
-    alert(" ChatGPT aytganidek,'Muvaffaqiyatli ro‘yxatdan o‘tdingiz! Endi kirishingiz mumkin.'");
-    showLogin();
   }
 }

@@ -1,38 +1,30 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>IPE Chat</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  <!-- Login qismi -->
+  <!-- Login va Ro'yxatdan o'tish -->
   <div class="signIn" id="divsignin">
-    <input class="ism" placeholder="ism" id="nameId">
-    <input class="login" type="password" placeholder="parol" id="passId">
+    <input class="ism" placeholder="Ism" id="nameId" />
+    <input class="login" type="password" placeholder="Parol" id="passId" />
     <button class="kirish" onclick="kirish()">Kirish</button>
-    <button class="kirish" onclick="showSignup()">Ro‘yxatdan o‘tish</button>
+    <button class="kirish" onclick="signUp()">Ro'yxatdan o'tish</button>
   </div>
 
-  <!-- Ro‘yxatdan o‘tish qismi -->
-  <div class="signIn" id="divsignup" style="display:none;">
-    <input type="text" id="newName" placeholder="Yangi ism" class="ism">
-    <input type="password" id="newPass" placeholder="Yangi parol" class="login">
-    <button class="kirish" onclick="signup()">Ro‘yxatdan o‘tish</button>
-    <button class="kirish" onclick="showLogin()">Orqaga</button>
+  <!-- Chat oynasi -->
+  <div class="msg" id="msgId"></div>
+
+  <!-- Xabar yuborish -->
+  <div class="sendDiv">
+    <input type="text" class="textin" placeholder="Xabar yozing..." id="txtid" />
+    <input class="sendbtn btn" type="submit" value="Send" onclick="sendMessage()" />
   </div>
 
-  <!-- Chat qismi -->
-  <div id="chatDiv" style="display:none; width:100%">
-    <div class="msg" id="msgId"></div>
-    <div class="sendDiv">
-      <input type="text" class="textin" placeholder="Xabar" id="txtid">
-      <input class="sendbtn" type="submit" value="Send" onclick="sendMessage()">
-    </div>
-  </div>
-
-  <script src="script.js"></script>
+  <script src="./script.js"></script>
 </body>
 </html>
