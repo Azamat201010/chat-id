@@ -1,5 +1,4 @@
 const divMsg = document.getElementById("msgId");
-const userbaza = "MirAziz";
 var user = document.getElementById("nameId");
 var txt = document.getElementById("txtid");
 var pass = document.getElementById("passId");
@@ -16,80 +15,96 @@ async function sendMessage() {
     new Date().toTimeString().slice(0, 8) +
     " / " +
     new Date().toDateString();
-  const { data, error } = await sardor
-    .from("massages")
-    .insert([
-      {
-        user: user.value.trim(),
-        msg: txt.value.trim(),
-        time_insert: vaqt,
-      },
-    ])
-    .select();
+  await sardor.from("massages").insert([
+    { user: ism, msg: txt.value.trim(), time_insert: vaqt }
+  ]);
   txt.value = "";
 }
 
 async function loadData() {
   const { data, error } = await sardor.from("massages").select("*");
   if (error) {
-    divMsg.innerHTML = error;
+    divMsg.innerHTML = error.message;
   } else {
     divMsg.innerHTML = "";
     for (let i = 0; i < data.length; i++) {
-      console.log(data[i].user);
       var userbazaa = data[i].user;
       var txtbaza = data[i].msg;
-
-      if (ism == userbazaa) {
-        stat = "me";
-      } else {
-        stat = "other";
-      }
+      stat = (ism == userbazaa) ? "me" : "other";
 
       divMsg.innerHTML += `<div class='${stat}'>
           <h3>${userbazaa}</h3>
           <p>${txtbaza}</p>
+          <small>${data[i].time_insert}</small>
         </div>`;
-      divMsg.scrollTop = divMsg.scrollHeight;
     }
+    divMsg.scrollTop = divMsg.scrollHeight;
   }
 }
 
 async function kirish() {
   ism = user.value.trim();
-  let parol = pass.value.trim();   // 🔥 faqat shu joyi to‘g‘irlandi
+  let parol = pass.value.trim();
 
-  const { data: odam, error: nito } = await sardor
+  if (!ism || !parol) {
+    alert("Iltimos, ism va parolni to'ldiring!");
+    return;
+  }
+
+  const { data: odam } = await sardor
     .from("users")
     .select("*")
     .eq("name", ism)
     .eq("pass", parol);
 
-  if (odam.length == 1) {
+  if (odam && odam.length === 1) {
     loadData();
-
-    sardor
-      .channel("realtime:massages")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "massages" },
-        (payload) => {
-          const data = payload.new;
-          let stat = ism === data.user ? "me" : "other";
-
-          divMsg.innerHTML += `<div class='${stat}'>
-              <h3>${data.user}</h3>
-              <p>${data.msg}</p>
-              <small>${data.time_insert}</small>
-            </div>`;
-
-          divMsg.scrollTop = divMsg.scrollHeight;
-        }
-      )
+    sardor.channel("realtime:massages")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "massages" }, (payload) => {
+        const data = payload.new;
+        let stat = (ism === data.user) ? "me" : "other";
+        divMsg.innerHTML += `<div class='${stat}'>
+            <h3>${data.user}</h3>
+            <p>${data.msg}</p>
+            <small>${data.time_insert}</small>
+          </div>`;
+        divMsg.scrollTop = divMsg.scrollHeight;
+      })
       .subscribe();
 
     document.getElementById("divsignin").style.display = "none";
   } else {
-    alert("odam bolib keldik it bolib ketmaylik");
+    alert("Ism yoki parol noto‘g‘ri!");
   }
+}
+
+async function signUp() {
+  let newName = document.getElementById("newNameId").value.trim();
+  let newPass = document.getElementById("newPassId").value.trim();
+
+  if (!newName || !newPass) {
+    alert("Iltimos, yangi ism va parolni to'ldiring!");
+    return;
+  }
+
+  const { data, error } = await sardor
+    .from("users")
+    .insert([{ name: newName, pass: newPass }]);
+
+  if (error) {
+    alert("Xato: " + error.message);
+  } else {
+    alert("Muvaffaqiyatli ro'yxatdan o'tdingiz! Endi kirishingiz mumkin.");
+    showSignIn();
+  }
+}
+
+function showSignUp() {
+  document.getElementById("divsignin").style.display = "none";
+  document.getElementById("divsignup").style.display = "flex";
+}
+
+function showSignIn() {
+  document.getElementById("divsignup").style.display = "none";
+  document.getElementById("divsignin").style.display = "flex";
 }

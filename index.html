@@ -4,27 +4,34 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>IPE Chat</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  <!-- Login va Ro'yxatdan o'tish -->
+
+  <!-- Kirish -->
   <div class="signIn" id="divsignin">
     <input class="ism" placeholder="Ism" id="nameId" />
     <input class="login" type="password" placeholder="Parol" id="passId" />
     <button class="kirish" onclick="kirish()">Kirish</button>
+    <button class="kirish" onclick="showSignUp()">Ro'yxatdan o'tish</button>
+  </div>
+
+  <!-- Ro'yxatdan o'tish -->
+  <div class="signIn" id="divsignup" style="display:none;">
+    <input class="ism" placeholder="Yangi ism" id="newNameId" />
+    <input class="login" type="password" placeholder="Yangi parol" id="newPassId" />
     <button class="kirish" onclick="signUp()">Ro'yxatdan o'tish</button>
+    <button class="kirish" onclick="showSignIn()">Ortga qaytish</button>
   </div>
 
-  <!-- Chat oynasi -->
+  <!-- Chat -->
   <div class="msg" id="msgId"></div>
-
-  <!-- Xabar yuborish -->
   <div class="sendDiv">
-    <input type="text" class="textin" placeholder="Xabar yozing..." id="txtid" />
-    <input class="sendbtn btn" type="submit" value="Send" onclick="sendMessage()" />
+    <input type="text" class="textin" placeholder="Xabar" id="txtid" />
+    <input class="sendbtn" type="submit" value="Send" onclick="sendMessage()" />
   </div>
 
-  <script src="./script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
