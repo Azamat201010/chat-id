@@ -57,7 +57,6 @@ body {
   width: 100%;
   max-width: 1200px;
   height: 80vh;
-  overflow-y: auto;
   background: rgba(18, 18, 18, 0.95);
   padding: 20px;
   border-radius: 14px;
@@ -65,22 +64,42 @@ body {
   box-shadow: 0 8px 25px rgba(0,0,0,0.6);
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  align-items: stretch;
 }
 
 /* Chat messages container */
 #msgId {
+  flex: 1; /* chatDiv ichida qolgan bo'sh joyni egallaydi */
   display: flex;
-  flex-direction: column;
-  gap: 12px; /* Xabarlar orasidagi bo‘shliq */
-  overflow-y: auto;
   width: 100%;
+  padding: 10px;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
   padding-bottom: 10px;
 }
+
+/* Scrollbar */
+#msgId::-webkit-scrollbar {
+  width: 10px;
+}
+
+#msgId::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 #msgId::-webkit-scrollbar-thumb {
-    background: rgba(0,0,0,0.3); /* thumb rangi va shaffoflik */
-    border-radius: 5px;
+  background: rgba(0,255,127,0.4);
+  border-radius: 5px;
+}
+
+#msgId::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,255,127,0.7);
+}
+
+/* Firefox scrollbar */
+#msgId {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,255,127,0.4) transparent;
 }
 
 /* Chat bubbles */
@@ -90,7 +109,7 @@ body {
   max-width: 70%;
   word-wrap: break-word;
   animation: fadeInUp 0.3s ease;
-  background-color: #1e1e1e; /* default fon */
+  background-color: #1e1e1e;
 }
 
 /* Foydalanuvchi xabarlari (o'ng) */
@@ -133,8 +152,6 @@ body {
 /* Send message */
 .sendDiv {
   display: flex;
-  position:absolute;
-  bottom:0;
   gap: 10px;
   margin-top: 20px;
   width: 100%;
