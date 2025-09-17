@@ -78,6 +78,10 @@ body {
   width: 100%;
   padding-bottom: 10px;
 }
+#msgId::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.3); /* thumb rangi va shaffoflik */
+    border-radius: 5px;
+}
 
 /* Chat bubbles */
 #msgId .me, #msgId .other {
