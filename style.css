@@ -129,6 +129,8 @@ body {
 /* Send message */
 .sendDiv {
   display: flex;
+  position:absolute;
+  bottom:0;
   gap: 10px;
   margin-top: 20px;
   width: 100%;
