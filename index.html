@@ -6,30 +6,58 @@
   <title>IPE Chat</title>
   <link rel="stylesheet" href="style.css"/>
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
+  <script>
+    (function(){
+      emailjs.init("Z8SVdSdY1PRX8Qisa"); // EmailJS public key
+    })(); -->
+  </script>
+   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+   <script type="text/javascript">
+       (function() {
+           // https://dashboard.emailjs.com/admin/account
+           emailjs.init({
+             publicKey: "5Q9g91ONPJe-wgV2Q",
+           });
+       })();
+   </script>
 </head>
 <body>
 
+
   <!-- Kirish -->
   <div class="signIn" id="divsignin">
-    <input class="ism" placeholder="Ism" id="nameId" />
-    <input class="login" type="password" placeholder="Parol" id="passId" />
-    <button class="kirish" onclick="kirish()">Kirish</button>
-    <button class="kirish" onclick="showSignUp()">Ro'yxatdan o'tish</button>
+    <input placeholder="Ism" id="nameId" />
+    <input type="email" placeholder="Email" id="emailId" />
+    <input type="password" placeholder="Parol" id="passId" />
+    <button onclick="kirish()">Kirish</button>
+    <button onclick="showSignUp()">Ro'yxatdan o'tish</button>
   </div>
 
   <!-- Ro'yxatdan o'tish -->
-  <div class="signIn" id="divsignup" style="display:none;">
-    <input class="ism" placeholder="Yangi ism" id="newNameId" />
-    <input class="login" type="password" placeholder="Yangi parol" id="newPassId" />
-    <button class="kirish" onclick="signUp()">Ro'yxatdan o'tish</button>
-    <button class="kirish" onclick="showSignIn()">Ortga qaytish</button>
+  <div class="signIn" id="divsignup" style="display:none; flex-direction:column;" >
+    <div id="signupStep1">
+      <input placeholder="Yangi ism" id="newNameId" />
+      <input type="email" placeholder="Email (@gmail.com)" id="newEmailId" />
+      <input type="password" placeholder="Yangi parol" id="newPassId" />
+      <button onclick="signUp()">Davom etish</button>
+      <button onclick="showSignIn()">Ortga qaytish</button>
+    </div>
+
+    <!-- Tasdiqlash -->
+    <div id="verifyDiv" style="display:none; flex-direction:column;">
+      <input placeholder="Tasdiqlash kodi" id="verifyCode" />
+      <button onclick="verifyCode()">Tasdiqlash</button>
+    </div>
   </div>
 
   <!-- Chat -->
-  <div class="msg" id="msgId"></div>
-  <div class="sendDiv">
-    <input type="text" class="textin" placeholder="Xabar" id="txtid" />
-    <input class="sendbtn" type="submit" value="Send" onclick="sendMessage()" />
+  <div id="chatDiv" style="display:none; flex-direction:column; align-items:center;">
+    <div class="msg" id="msgId"></div>
+    <div class="sendDiv">
+      <input type="text" placeholder="Xabar" id="txtid" />
+      <input type="submit" value="Send" onclick="sendMessage()" />
+    </div>
   </div>
 
   <script src="script.js"></script>
