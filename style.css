@@ -71,35 +71,28 @@ body {
   flex: 1;
   display: flex;
   width: 100%;
-  padding: 10px;
   flex-direction: column;
   gap: 12px;
   overflow-y: auto;
-  padding-bottom: 10px;
+  padding: 10px 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,255,127,0.4) transparent;
+  scroll-behavior: smooth;
 }
 
-/* Scrollbar */
+/* Scrollbar Webkit */
 #msgId::-webkit-scrollbar {
   width: 10px;
 }
-
 #msgId::-webkit-scrollbar-track {
   background: transparent;
 }
-
 #msgId::-webkit-scrollbar-thumb {
   background: rgba(0,255,127,0.4);
   border-radius: 5px;
 }
-
 #msgId::-webkit-scrollbar-thumb:hover {
   background: rgba(0,255,127,0.7);
-}
-
-/* Firefox scrollbar */
-#msgId {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0,255,127,0.4) transparent;
 }
 
 /* Chat bubbles */
@@ -170,7 +163,7 @@ body {
   background: #1a1a1a;
 }
 
-/* Tugmalar */
+/* Tugmalar (Send) */
 .sendDiv input[type="submit"] {
   padding: 12px 20px;
   border: none;
@@ -187,16 +180,30 @@ body {
   box-shadow: 0 6px 15px rgba(0, 255, 127, 0.5);
 }
 
-/* Fayl input */
-#fileInput {
-  padding: 10px;
+/* Fayl input — Send tugmasiga o‘xshash style */
+.file {
+  padding: 12px 20px;
   border-radius: 10px;
-  background: #1a1a1a;
-  color: #ccc;
-  border: 1px solid #333;
+  border: none;
+  background-color: #00ff7f;
+  color: #121212;
+  font-weight: bold;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
+  transition: 0.3s;
   max-width: 200px;
+  text-align: center;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 255, 127, 0.5);
+  background-color: #00cc66;
+  color: #fff;
 }
 
 /* Animatsiya */
@@ -219,9 +226,10 @@ body {
   #msgId .me, #msgId .other {
     max-width: 85%;
   }
-  #fileInput {
+  .file {
     max-width: 150px;
-    font-size: 12px;
+    font-size: 13px;
+    padding: 10px 16px;
   }
 }
 
@@ -229,8 +237,9 @@ body {
   #msgId .me, #msgId .other {
     max-width: 100%;
   }
-  #fileInput {
+  .file {
     max-width: 120px;
-    font-size: 11px;
+    font-size: 12px;
+    padding: 8px 14px;
   }
 }
