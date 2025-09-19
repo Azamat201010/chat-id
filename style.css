@@ -68,7 +68,7 @@ body {
 
 /* Chat messages container */
 #msgId {
-  flex: 1; /* chatDiv ichida qolgan bo'sh joyni egallaydi */
+  flex: 1;
   display: flex;
   width: 100%;
   padding: 10px;
@@ -112,7 +112,6 @@ body {
   background-color: #1e1e1e;
 }
 
-/* Foydalanuvchi xabarlari (o'ng) */
 #msgId .me {
   background-color: #00ff7f33;
   color: #fff;
@@ -121,7 +120,6 @@ body {
   margin-left: auto;
 }
 
-/* Bot / boshqa xabarlar (chap) */
 #msgId .other {
   background-color: #00ff7f11;
   color: #fff;
@@ -130,7 +128,6 @@ body {
   margin-right: auto;
 }
 
-/* Chat xabar ichidagi matn */
 #msgId h4 {
   font-size: 13px;
   margin-bottom: 5px;
@@ -173,6 +170,7 @@ body {
   background: #1a1a1a;
 }
 
+/* Tugmalar */
 .sendDiv input[type="submit"] {
   padding: 12px 20px;
   border: none;
@@ -187,6 +185,18 @@ body {
 .sendDiv input[type="submit"]:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0, 255, 127, 0.5);
+}
+
+/* Fayl input */
+#fileInput {
+  padding: 10px;
+  border-radius: 10px;
+  background: #1a1a1a;
+  color: #ccc;
+  border: 1px solid #333;
+  cursor: pointer;
+  font-size: 13px;
+  max-width: 200px;
 }
 
 /* Animatsiya */
@@ -209,10 +219,18 @@ body {
   #msgId .me, #msgId .other {
     max-width: 85%;
   }
+  #fileInput {
+    max-width: 150px;
+    font-size: 12px;
+  }
 }
 
 @media (max-width: 480px) {
   #msgId .me, #msgId .other {
     max-width: 100%;
+  }
+  #fileInput {
+    max-width: 120px;
+    font-size: 11px;
   }
 }
