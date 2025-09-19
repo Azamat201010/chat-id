@@ -6,24 +6,16 @@
   <title>IPE Chat</title>
   <link rel="stylesheet" href="style.css"/>
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
-  <script>
-    (function(){
-      emailjs.init("Z8SVdSdY1PRX8Qisa"); // EmailJS public key
-    })(); -->
-  </script>
-   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-   <script type="text/javascript">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script type="text/javascript">
        (function() {
-           // https://dashboard.emailjs.com/admin/account
            emailjs.init({
              publicKey: "5Q9g91ONPJe-wgV2Q",
            });
        })();
-   </script>
+  </script>
 </head>
 <body>
-
 
   <!-- Kirish -->
   <div class="signIn" id="divsignin">
@@ -56,6 +48,7 @@
     <div class="msg" id="msgId"></div>
     <div class="sendDiv">
       <input type="text" placeholder="Xabar" id="txtid" />
+      <input type="file" id="fileid" /> <!-- ✅ Fayl yuklash -->
       <input type="submit" value="Send" onclick="sendMessage()" />
     </div>
   </div>
