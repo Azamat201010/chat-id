@@ -6,6 +6,7 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const divMsg = document.getElementById("msgId");
 var ism = "";
 var txt = document.getElementById("txtid");
+var fileInput = document.getElementById("fileid");
 
 let verificationCode = "";
 let savedUser = {};
@@ -13,12 +14,38 @@ let savedUser = {};
 // ---------------- CHAT ----------------
 async function sendMessage() {
   var vaqt = new Date().toTimeString().slice(0, 8) + " / " + new Date().toDateString();
-  if (!txt.value.trim()) return;
 
-  await supabaseClient.from("massages").insert([
-    { user: ism, msg: txt.value.trim(), time_insert: vaqt }
-  ]);
-  txt.value = "";
+  // Agar matn bo‘lsa
+  if (txt.value.trim()) {
+    await supabaseClient.from("massages").insert([
+      { user: ism, msg: txt.value.trim(), time_insert: vaqt, type: "text" }
+    ]);
+    txt.value = "";
+  }
+
+  // Agar fayl tanlangan bo‘lsa
+  if (fileInput.files.length > 0) {
+    const file = fileInput.files[0];
+    const filePath = `${Date.now()}_${file.name}`;
+
+    const { error: uploadError } = await supabaseClient
+      .storage.from("File") // katta F bilan!
+      .upload(filePath, file);
+
+    if (!uploadError) {
+      const { data: publicUrlData } = supabaseClient
+        .storage.from("File")
+        .getPublicUrl(filePath);
+
+      await supabaseClient.from("massages").insert([
+        { user: ism, msg: publicUrlData.publicUrl, time_insert: vaqt, type: "file" }
+      ]);
+    } else {
+      alert("Fayl yuklashda xato: " + uploadError.message);
+    }
+
+    fileInput.value = "";
+  }
 }
 
 async function loadData() {
@@ -29,11 +56,20 @@ async function loadData() {
     divMsg.innerHTML = "";
     data.forEach(d => {
       let stat = (ism === d.user) ? "me" : "other";
-      divMsg.innerHTML += `<div class='${stat}'>
-        <h4>${d.user}</h4>
-        <p>${d.msg}</p>
-        <small>${d.time_insert}</small>
-      </div>`;
+
+      if (d.type === "file") {
+        divMsg.innerHTML += `<div class='${stat}'>
+          <h4>${d.user}</h4>
+          <a href="${d.msg}" target="_blank">📎 Faylni ochish</a>
+          <small>${d.time_insert}</small>
+        </div>`;
+      } else {
+        divMsg.innerHTML += `<div class='${stat}'>
+          <h4>${d.user}</h4>
+          <p>${d.msg}</p>
+          <small>${d.time_insert}</small>
+        </div>`;
+      }
     });
     divMsg.scrollTop = divMsg.scrollHeight;
   }
@@ -65,11 +101,21 @@ async function kirish() {
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "massages" }, (payload) => {
         const data = payload.new;
         let stat = (ism === data.user) ? "me" : "other";
-        divMsg.innerHTML += `<div class='${stat}'>
+
+        if (data.type === "file") {
+          divMsg.innerHTML += `<div class='${stat}'>
+            <h4>${data.user}</h4>
+            <a href="${data.msg}" target="_blank">📎 Faylni ochish</a>
+            <small>${data.time_insert}</small>
+          </div>`;
+        } else {
+          divMsg.innerHTML += `<div class='${stat}'>
             <h4>${data.user}</h4>
             <p>${data.msg}</p>
             <small>${data.time_insert}</small>
           </div>`;
+        }
+
         divMsg.scrollTop = divMsg.scrollHeight;
       })
       .subscribe();
@@ -95,21 +141,17 @@ async function signUp() {
   }
 
   verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-  
 
-
-  try{
-    await emailjs.send("service_zdl3mmd","template_1r61t21",{
+  try {
+    await emailjs.send("service_zdl3mmd", "template_1r61t21", {
       passcode: verificationCode,
       time: new Date().toTimeString(),
       email: newEmail,
-      })
-      alert('success')
+    });
+    alert('Email yuborildi!');
+  } catch (error) {
+    alert(error);
   }
-   catch(error){
-    alert(error)
-   }
-    
 
   savedUser = { name: newName, email: newEmail, pass: newPass };
 
