@@ -56,7 +56,7 @@ body {
 #chatDiv {
   width: 100%;
   max-width: 1200px;
-  height: calc(100vh - 120px);
+  height: 80vh;
   background: rgba(18, 18, 18, 0.95);
   padding: 20px;
   border-radius: 14px;
@@ -82,7 +82,7 @@ body {
 
 /* Scrollbar Webkit */
 #msgId::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 #msgId::-webkit-scrollbar-track {
   background: transparent;
@@ -103,7 +103,7 @@ body {
   word-wrap: break-word;
   animation: fadeInUp 0.3s ease;
   background-color: #1e1e1e;
-  position: relative;
+  position: relative; /* delete tugma joylashishi uchun */
 }
 
 #msgId .me {
@@ -140,20 +140,27 @@ body {
   display: block;
 }
 
-/* Delete tugmasi */
+/* Delete tugma */
 #msgId button {
   background: transparent;
   border: none;
-  color: #ff5c5c;
-  font-size: 13px;
+  color: #ff4d4d;
+  font-size: 16px;
   cursor: pointer;
-  margin-top: 4px;
-  padding: 0;
+  position: absolute;
+  top: 5px;
+  right: 8px;
+  display: none;
   transition: 0.3s;
+}
+
+#msgId .me:hover button {
+  display: block;
 }
 
 #msgId button:hover {
   color: #ff1a1a;
+  transform: scale(1.2);
 }
 
 /* Send message */
@@ -164,7 +171,6 @@ body {
   width: 100%;
 }
 
-/* Matn kiritish */
 .sendDiv input[type="text"] {
   flex: 1;
   padding: 12px 16px;
@@ -181,7 +187,7 @@ body {
   background: #1a1a1a;
 }
 
-/* Send tugmasi */
+/* Tugmalar (Send) */
 .sendDiv input[type="submit"] {
   padding: 12px 20px;
   border: none;
@@ -198,8 +204,36 @@ body {
   box-shadow: 0 6px 15px rgba(0, 255, 127, 0.5);
 }
 
-/* Fayl input — chiroyli tugma */
-label.file {
+/* Fayl input — chiroyli style */
+.file {
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: none;
+  background-color: #00ff7f;
+  color: #121212;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+  text-align: center;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 255, 127, 0.5);
+  background-color: #00cc66;
+  color: #121212;
+}
+
+/* Fayl inputni yashirish va label ishlatish */
+input[type="file"] {
+  display: none;
+}
+label[for="fileid"] {
   padding: 12px 20px;
   border-radius: 10px;
   background-color: #00ff7f;
@@ -209,22 +243,10 @@ label.file {
   font-size: 14px;
   transition: 0.3s;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
-
-label.file:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0, 255, 127, 0.5);
+label[for="fileid"]:hover {
   background-color: #00cc66;
-}
-
-/* Input hidden qilib qo'yiladi */
-label.file input[type="file"] {
-  display: none;
+  box-shadow: 0 6px 15px rgba(0,255,127,0.5);
 }
 
 /* Animatsiya */
@@ -247,29 +269,15 @@ label.file input[type="file"] {
   #msgId .me, #msgId .other {
     max-width: 85%;
   }
-  label.file {
-    font-size: 13px;
-    padding: 10px 14px;
-  }
 }
 
 @media (max-width: 480px) {
-  #chatDiv {
-    height: calc(100vh - 100px);
-    padding: 10px;
-  }
   #msgId .me, #msgId .other {
     max-width: 100%;
   }
-  label.file {
-    font-size: 12px;
-    padding: 8px 12px;
-  }
-  .sendDiv {
-    flex-direction: column;
-    gap: 8px;
-  }
-  .sendDiv input[type="submit"] {
-    width: 100%;
+  #msgId button {
+    font-size: 14px;
+    top: 3px;
+    right: 5px;
   }
 }
