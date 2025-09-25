@@ -30,7 +30,7 @@
   <div class="signIn" id="divsignup" style="display:none; flex-direction:column;" >
     <div id="signupStep1">
       <input placeholder="Yangi ism" id="newNameId" />
-      <input type="email" placeholder="Email (@gmail.com)" id="newEmailId" />
+      <input type="email" placeholder="Email " id="newEmailId" />
       <input type="password" placeholder="Yangi parol" id="newPassId" />
       <button onclick="signUp()">Davom etish</button>
       <button onclick="showSignIn()">Ortga qaytish</button>
@@ -48,7 +48,13 @@
     <div class="msg" id="msgId"></div>
     <div class="sendDiv">
       <input type="text" placeholder="Xabar" id="txtid" />
-      <input type="file" class="file" id="fileid" /> <!-- ✅ Fayl yuklash -->
+      
+      <!-- Fayl tanlash tugmasi -->
+      <label class="file">
+        📎 Fayl tanlash
+        <input type="file" id="fileid">
+      </label>
+
       <input type="submit" value="Send" onclick="sendMessage()" />
     </div>
   </div>
