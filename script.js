@@ -69,7 +69,7 @@ function renderMessage(d) {
         <h4>${d.user}</h4>
         <img src="${d.msg}" style="max-width:200px; border-radius:8px;" alt="Rasm">
         <small>${d.time_insert}</small>
-        ${ism === d.user ? `<button onclick="deleteMessage(${d.id})">❌ O‘chirish</button>` : ""}
+        ${ism === d.user ? `<button onclick="deleteMessage(${d.id})"> O‘chirish</button>` : ""}
       </div>`;
     } else if (["mp4", "webm", "ogg"].includes(ext)) {
       divMsg.innerHTML += `<div class='${stat}' id="msg-${d.id}">
@@ -79,14 +79,14 @@ function renderMessage(d) {
           Sizning qurilmangiz video formatni qo‘llab-quvvatlamaydi.
         </video>
         <small>${d.time_insert}</small>
-        ${ism === d.user ? `<button onclick="deleteMessage(${d.id})">❌ O‘chirish</button>` : ""}
+        ${ism === d.user ? `<button onclick="deleteMessage(${d.id})"> O‘chirish</button>` : ""}
       </div>`;
     } else {
       divMsg.innerHTML += `<div class='${stat}' id="msg-${d.id}">
         <h4>${d.user}</h4>
         <a href="${d.msg}" target="_blank">📎 Faylni ochish</a>
         <small>${d.time_insert}</small>
-        ${ism === d.user ? `<button onclick="deleteMessage(${d.id})">❌ O‘chirish</button>` : ""}
+        ${ism === d.user ? `<button onclick="deleteMessage(${d.id})"> O‘chirish</button>` : ""}
       </div>`;
     }
   } else {
@@ -94,7 +94,7 @@ function renderMessage(d) {
       <h4>${d.user}</h4>
       <p>${d.msg}</p>
       <small>${d.time_insert}</small>
-      ${ism === d.user ? `<button onclick="deleteMessage(${d.id})">❌ O‘chirish</button>` : ""}
+      ${ism === d.user ? `<button onclick="deleteMessage(${d.id})"> O‘chirish</button>` : ""}
     </div>`;
   }
 }
