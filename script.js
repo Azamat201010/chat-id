@@ -29,7 +29,7 @@ async function sendMessage() {
     const filePath = `${Date.now()}_${file.name}`;
 
     const { error: uploadError } = await supabaseClient
-      .storage.from("File") // katta F bilan!
+      .storage.from("File")
       .upload(filePath, file);
 
     if (!uploadError) {
@@ -48,53 +48,67 @@ async function sendMessage() {
   }
 }
 
-// ✅ Xabar chiqarishni alohida funksiya qildik
-function renderMessage(d) {
-  let stat = (ism === d.user) ? "me" : "other";
-
-  let div = document.createElement("div");
-  div.className = stat;
-
-  let html = `
-    <h4>${d.user}</h4>
-    ${d.type === "file"
-      ? `<a href="${d.msg}" target="_blank">📎 Faylni ochish</a>`
-      : `<p>${d.msg}</p>`}
-    <small>${d.time_insert}</small>
-  `;
-
-  // ✅ O‘z xabarlaringizga o‘chirish tugmasi qo‘shildi
-  if (ism === d.user) {
-    html += `<button class="delete-btn" onclick="deleteMessage(${d.id})">❌ O‘chirish</button>`;
-  }
-
-  div.innerHTML = html;
-  divMsg.appendChild(div);
-  divMsg.scrollTop = divMsg.scrollHeight;
-}
-
+// ---------------- LOAD DATA ----------------
 async function loadData() {
-  const { data, error } = await supabaseClient.from("massages").select("*").order("id", { ascending: true });
+  const { data, error } = await supabaseClient.from("massages").select("*");
   if (error) {
     divMsg.innerHTML = error.message;
   } else {
     divMsg.innerHTML = "";
-    data.forEach(d => renderMessage(d));
+    data.forEach(d => {
+      renderMessage(d);
+    });
     divMsg.scrollTop = divMsg.scrollHeight;
   }
 }
 
-// ✅ O‘chirish funksiyasi
+// ---------------- RENDER MESSAGE ----------------
+function renderMessage(d) {
+  let stat = (ism === d.user) ? "me" : "other";
+
+  if (d.type === "file") {
+    let ext = d.msg.split('.').pop().toLowerCase();
+
+    if (["jpg", "jpeg", "png", "gif", "webp"].includes(ext)) {
+      divMsg.innerHTML += `<div class='${stat}'>
+        <h4>${d.user}</h4>
+        <img src="${d.msg}" style="max-width:200px; border-radius:8px;" alt="Rasm">
+        <small>${d.time_insert}</small>
+        ${ism === d.user ? `<button onclick="deleteMessage(${d.id})">❌ O‘chirish</button>` : ""}
+      </div>`;
+    } else if (["mp4", "webm", "ogg"].includes(ext)) {
+      divMsg.innerHTML += `<div class='${stat}'>
+        <h4>${d.user}</h4>
+        <video controls style="max-width:250px; border-radius:8px;">
+          <source src="${d.msg}" type="video/${ext}">
+          Sizning qurilmangiz video formatni qo‘llab-quvvatlamaydi.
+        </video>
+        <small>${d.time_insert}</small>
+        ${ism === d.user ? `<button onclick="deleteMessage(${d.id})">❌ O‘chirish</button>` : ""}
+      </div>`;
+    } else {
+      divMsg.innerHTML += `<div class='${stat}'>
+        <h4>${d.user}</h4>
+        <a href="${d.msg}" target="_blank">📎 Faylni ochish</a>
+        <small>${d.time_insert}</small>
+        ${ism === d.user ? `<button onclick="deleteMessage(${d.id})">❌ O‘chirish</button>` : ""}
+      </div>`;
+    }
+  } else {
+    divMsg.innerHTML += `<div class='${stat}'>
+      <h4>${d.user}</h4>
+      <p>${d.msg}</p>
+      <small>${d.time_insert}</small>
+      ${ism === d.user ? `<button onclick="deleteMessage(${d.id})">❌ O‘chirish</button>` : ""}
+    </div>`;
+  }
+}
+
+// ---------------- DELETE MESSAGE ----------------
 async function deleteMessage(id) {
-  if (!confirm("Xabarni o‘chirmoqchimisiz?")) return;
-
-  const { error } = await supabaseClient
-    .from("massages")
-    .delete()
-    .eq("id", id);
-
+  const { error } = await supabaseClient.from("massages").delete().eq("id", id);
   if (error) {
-    alert("Xato: " + error.message);
+    alert("Xatolik: " + error.message);
   }
 }
 
@@ -120,12 +134,10 @@ async function kirish() {
     document.getElementById("chatDiv").style.display = "flex";
     loadData();
 
-    supabaseClient.channel("massages")
+    supabaseClient.channel("realtime:massages")
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "massages" }, (payload) => {
         renderMessage(payload.new);
-      })
-      .on("postgres_changes", { event: "DELETE", schema: "public", table: "massages" }, (payload) => {
-        loadData();
+        divMsg.scrollTop = divMsg.scrollHeight;
       })
       .subscribe();
   } else {
@@ -144,8 +156,8 @@ async function signUp() {
     return;
   }
 
-  if (!newEmail.endsWith("@")) {
-    alert("Iltimos soxta emaildan foydalanmang!!!");
+  if (!newEmail.includes("@")) {
+    alert("Iltimos haqiqiy email kiriting!");
     return;
   }
 
