@@ -22,7 +22,12 @@ async function sendMessage() {
   // Agar matn bo‘lsa
   if (txt.value.trim()) {
     await supabaseClient.from("massages").insert([
-      { user: ism, msg: txt.value.trim(), time_insert: vaqt, type: "text" },
+      {
+        user: ism,
+        msg: txt.value.trim(),
+        time_insert: vaqt,
+        type: "text",
+      },
     ]);
     txt.value = "";
   }
@@ -32,13 +37,13 @@ async function sendMessage() {
     const file = fileInput.files[0];
     const filePath = `${Date.now()}_${file.name}`;
 
-    const { error: uploadError } = await supabaseClient
-      .storage.from("File")
+    const { error: uploadError } = await supabaseClient.storage
+      .from("File")
       .upload(filePath, file);
 
     if (!uploadError) {
-      const { data: publicUrlData } = supabaseClient
-        .storage.from("File")
+      const { data: publicUrlData } = supabaseClient.storage
+        .from("File")
         .getPublicUrl(filePath);
 
       await supabaseClient.from("massages").insert([
@@ -57,7 +62,7 @@ async function sendMessage() {
   }
 }
 
-// ---------------- MESSAGE RENDER ----------------
+// Xabarni ekranga chiqarish
 function renderMessage(d) {
   let stat = ism === d.user ? "me" : "other";
 
@@ -69,24 +74,36 @@ function renderMessage(d) {
         <h4>${d.user}</h4>
         <img src="${d.msg}" style="max-width:200px; border-radius:8px;" alt="Rasm">
         <small>${d.time_insert}</small>
-        ${ism === d.user ? `<button onclick="deleteMessage(${d.id})"> O‘chirish</button>` : ""}
+        ${
+          ism === d.user
+            ? `<button onclick="deleteMessage(${d.id})">O‘chirish</button>`
+            : ""
+        }
       </div>`;
     } else if (["mp4", "webm", "ogg"].includes(ext)) {
       divMsg.innerHTML += `<div class='${stat}' id="msg-${d.id}">
         <h4>${d.user}</h4>
         <video controls style="max-width:250px; border-radius:8px;">
           <source src="${d.msg}" type="video/${ext}">
-          Sizning qurilmangiz video formatni qo‘llab-quvvatlamaydi.
+          Qurilmangiz video formatni qo‘llab-quvvatlamaydi.
         </video>
         <small>${d.time_insert}</small>
-        ${ism === d.user ? `<button onclick="deleteMessage(${d.id})"> O‘chirish</button>` : ""}
+        ${
+          ism === d.user
+            ? `<button onclick="deleteMessage(${d.id})">O‘chirish</button>`
+            : ""
+        }
       </div>`;
     } else {
       divMsg.innerHTML += `<div class='${stat}' id="msg-${d.id}">
         <h4>${d.user}</h4>
         <a href="${d.msg}" target="_blank">📎 Faylni ochish</a>
         <small>${d.time_insert}</small>
-        ${ism === d.user ? `<button onclick="deleteMessage(${d.id})"> O‘chirish</button>` : ""}
+        ${
+          ism === d.user
+            ? `<button onclick="deleteMessage(${d.id})">O‘chirish</button>`
+            : ""
+        }
       </div>`;
     }
   } else {
@@ -94,14 +111,24 @@ function renderMessage(d) {
       <h4>${d.user}</h4>
       <p>${d.msg}</p>
       <small>${d.time_insert}</small>
-      ${ism === d.user ? `<button onclick="deleteMessage(${d.id})"> O‘chirish</button>` : ""}
+      ${
+        ism === d.user
+          ? `<button onclick="deleteMessage(${d.id})">O‘chirish</button>`
+          : ""
+      }
     </div>`;
   }
+
+  divMsg.scrollTop = divMsg.scrollHeight;
 }
 
-// ---------------- LOAD DATA ----------------
+// Xabarlarni yuklash
 async function loadData() {
-  const { data, error } = await supabaseClient.from("massages").select("*");
+  const { data, error } = await supabaseClient
+    .from("massages")
+    .select("*")
+    .order("id", { ascending: true }); // eski → yangi
+
   if (error) {
     divMsg.innerHTML = error.message;
   } else {
@@ -121,10 +148,8 @@ async function deleteMessage(id) {
   if (error) {
     alert("Xatolik: " + error.message);
   } else {
-    let msgEl = document.getElementById("msg-" + id);
-    if (msgEl) {
-      msgEl.remove();
-    }
+    let el = document.getElementById(`msg-${id}`);
+    if (el) el.remove();
   }
 }
 
@@ -157,15 +182,6 @@ async function kirish() {
         { event: "INSERT", schema: "public", table: "massages" },
         (payload) => {
           renderMessage(payload.new);
-          divMsg.scrollTop = divMsg.scrollHeight;
-        }
-      )
-      .on(
-        "postgres_changes",
-        { event: "DELETE", schema: "public", table: "massages" },
-        (payload) => {
-          let msgEl = document.getElementById("msg-" + payload.old.id);
-          if (msgEl) msgEl.remove();
         }
       )
       .subscribe();
@@ -185,8 +201,8 @@ async function signUp() {
     return;
   }
 
-  if (!newEmail.endsWith("@")) {
-    alert("Iltimos soxta emaildan foydalanmang!!!");
+  if (!newEmail.includes("@")) {
+    alert("Iltimos haqiqiy email kiriting!");
     return;
   }
 
@@ -214,7 +230,9 @@ async function verifyCode() {
   let userCode = document.getElementById("verifyCode").value.trim();
 
   if (userCode === verificationCode) {
-    const { error } = await supabaseClient.from("users").insert([savedUser]);
+    const { error } = await supabaseClient
+      .from("users")
+      .insert([savedUser]);
 
     if (error) {
       alert("Xato: " + error.message);
