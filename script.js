@@ -48,30 +48,53 @@ async function sendMessage() {
   }
 }
 
+// ✅ Xabar chiqarishni alohida funksiya qildik
+function renderMessage(d) {
+  let stat = (ism === d.user) ? "me" : "other";
+
+  let div = document.createElement("div");
+  div.className = stat;
+
+  let html = `
+    <h4>${d.user}</h4>
+    ${d.type === "file"
+      ? `<a href="${d.msg}" target="_blank">📎 Faylni ochish</a>`
+      : `<p>${d.msg}</p>`}
+    <small>${d.time_insert}</small>
+  `;
+
+  // ✅ O‘z xabarlaringizga o‘chirish tugmasi qo‘shildi
+  if (ism === d.user) {
+    html += `<button class="delete-btn" onclick="deleteMessage(${d.id})">❌ O‘chirish</button>`;
+  }
+
+  div.innerHTML = html;
+  divMsg.appendChild(div);
+  divMsg.scrollTop = divMsg.scrollHeight;
+}
+
 async function loadData() {
-  const { data, error } = await supabaseClient.from("massages").select("*");
+  const { data, error } = await supabaseClient.from("massages").select("*").order("id", { ascending: true });
   if (error) {
     divMsg.innerHTML = error.message;
   } else {
     divMsg.innerHTML = "";
-    data.forEach(d => {
-      let stat = (ism === d.user) ? "me" : "other";
-
-      if (d.type === "file") {
-        divMsg.innerHTML += `<div class='${stat}'>
-          <h4>${d.user}</h4>
-          <a href="${d.msg}" target="_blank">📎 Faylni ochish</a>
-          <small>${d.time_insert}</small>
-        </div>`;
-      } else {
-        divMsg.innerHTML += `<div class='${stat}'>
-          <h4>${d.user}</h4>
-          <p>${d.msg}</p>
-          <small>${d.time_insert}</small>
-        </div>`;
-      }
-    });
+    data.forEach(d => renderMessage(d));
     divMsg.scrollTop = divMsg.scrollHeight;
+  }
+}
+
+// ✅ O‘chirish funksiyasi
+async function deleteMessage(id) {
+  if (!confirm("Xabarni o‘chirmoqchimisiz?")) return;
+
+  const { error } = await supabaseClient
+    .from("massages")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    alert("Xato: " + error.message);
   }
 }
 
@@ -97,26 +120,12 @@ async function kirish() {
     document.getElementById("chatDiv").style.display = "flex";
     loadData();
 
-    supabaseClient.channel("realtime:massages")
+    supabaseClient.channel("massages")
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "massages" }, (payload) => {
-        const data = payload.new;
-        let stat = (ism === data.user) ? "me" : "other";
-
-        if (data.type === "file") {
-          divMsg.innerHTML += `<div class='${stat}'>
-            <h4>${data.user}</h4>
-            <a href="${data.msg}" target="_blank">📎 Faylni ochish</a>
-            <small>${data.time_insert}</small>
-          </div>`;
-        } else {
-          divMsg.innerHTML += `<div class='${stat}'>
-            <h4>${data.user}</h4>
-            <p>${data.msg}</p>
-            <small>${data.time_insert}</small>
-          </div>`;
-        }
-
-        divMsg.scrollTop = divMsg.scrollHeight;
+        renderMessage(payload.new);
+      })
+      .on("postgres_changes", { event: "DELETE", schema: "public", table: "massages" }, (payload) => {
+        loadData();
       })
       .subscribe();
   } else {
@@ -135,8 +144,8 @@ async function signUp() {
     return;
   }
 
-  if (!newEmail.endsWith("@gmail.com")) {
-    alert("Faqat @gmail.com email qabul qilinadi!");
+  if (!newEmail.endsWith("@")) {
+    alert("Iltimos soxta emaildan foydalanmang!!!");
     return;
   }
 
