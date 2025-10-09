@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IPE Chat</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Supabase -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+  <!-- Agora SDK -->
+  <script src="https://download.agora.io/sdk/release/AgoraRTC_N.js"></script>
+
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    (function() {
+      emailjs.init({ publicKey: "5Q9g91ONPJe-wgV2Q" });
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- 🔐 Kirish -->
+  <div class="signIn" id="divsignin">
+    <input placeholder="Ism" id="nameId" />
+    <input type="email" placeholder="Email" id="emailId" />
+    <input type="password" placeholder="Parol" id="passId" />
+    <button onclick="kirish()">Kirish</button>
+    <button onclick="showSignUp()">Ro‘yxatdan o‘tish</button>
+  </div>
+
+  <!-- 🆕 Ro‘yxatdan o‘tish -->
+  <div class="signIn" id="divsignup" style="display:none;">
+    <div id="signupStep1">
+      <input placeholder="Ism" id="newNameId" />
+      <input type="email" placeholder="Email" id="newEmailId" />
+      <input type="password" placeholder="Parol" id="newPassId" />
+      <button onclick="signUp()">Davom etish</button>
+      <button onclick="showSignIn()">Ortga qaytish</button>
+    </div>
+
+    <div id="verifyDiv" style="display:none;">
+      <input placeholder="Tasdiqlash kodi" id="verifyCode" />
+      <button onclick="verifyCode()">Tasdiqlash</button>
+    </div>
+  </div>
+
+  <!-- 💬 Chat -->
+  <div id="chatDiv" style="display:none; flex-direction:column; align-items:center;">
+    <div id="msgId" class="msg"></div>
+
+    <div class="sendDiv">
+      <input type="text" placeholder="Xabar" id="txtid" />
+      <label class="file">📎 Fayl tanlash
+        <input type="file" id="fileid">
+      </label>
+      <input type="submit" value="Send" onclick="sendMessage()" />
+      <button class="voiceBtn" onclick="openVoiceChat()">🎥 Video Chat</button>
+    </div>
+  </div>
+
+  <!-- 🎥 Video Chat -->
+  <div id="videoChatContainer" style="display:none;">
+    <div class="video-header">
+      <h3>🎥 IPE Video Chat</h3>
+      <button class="closeBtn" onclick="leaveVideoChat()">❌</button>
+    </div>
+    <div id="videoArea">
+      <div class="video-box" id="local-player"></div>
+      <div class="video-box" id="remote-player"></div>
+    </div>
+    <div class="video-controls">
+      <button onclick="startVideoChat()">Kamerani yoqish</button>
+      <button onclick="leaveVideoChat()">Chiqish</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
